@@ -53,7 +53,27 @@ spec:
       }
     }
 
+    stage('Build Docker') {
+      steps {
+        container('docker') {
+          docker build -t my-app:$BUILD_NUMBER 
+        }
+      }
+    }
+    stage('Run Docker') {
+      steps {
+        container('docker') {
+          docker run my-app:$BUILD_NUMBER
+        }
+      }
+    }
 
 
 }
+
+post {
+    always {
+      junit 'target/surefire-reports/*.xml'
+    }
+
 }
